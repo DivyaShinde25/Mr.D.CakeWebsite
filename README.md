@@ -1,2 +1,40 @@
-# Mr.D.CakeWebsite
-The Mr. D Cake e-commerce project delivers a strong digital transformation using Agile Scrum and TDD. Built with HTML, CSS, JS, Node.js, it ensures scalable, secure performance with real-time inventory, automation, and improved user experience, enabling high ROI and long-term advantage
+# Mr D Cakes - E-commerce Website
+
+## Deployment Ready Files
+
+### Core Files (Required):
+- `index.html` - Main website
+- `admin.html` - Admin panel  
+- `favorites.html` - Favorites page
+- `script.js` - Main JavaScript functionality
+- `admin.js` - Admin panel functionality
+- `style.css` - Main styles
+- `admin.css` - Admin panel styles
+- `admin-order-styles.css` - Order management styles
+- `delivery-schedule.css` - Delivery form styles
+- `receipt-styles.css` - Receipt display styles
+- `tracking-styles.css` - Order tracking styles
+- `images/` - All product and UI images
+
+### Features:
+✅ User registration/login
+✅ Product catalog with 21 cakes
+✅ Shopping cart functionality
+✅ Favorites system
+✅ Order placement with delivery scheduling
+✅ Admin panel for order management
+✅ Order tracking system
+✅ Receipt generation
+✅ localStorage data persistence
+✅ Responsive design
+✅ SEO optimized
+
+### Admin Access:
+- Email: admin@mrdcakes.com
+- Password: admin123
+
+### Deployment:
+Upload all files to any static hosting service (Netlify, Vercel, GitHub Pages, etc.)
+
+### Data Storage:
+Uses browser localStorage - no database required for deployment.

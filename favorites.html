@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/0b03511168.js" crossorigin="anonymous"></script>
+    <title>Favorites - Mr D Cakes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loading-spinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+    
+    <div id="error-toast" class="error-toast">
+        <span id="error-message"></span>
+        <button onclick="hideError()">&times;</button>
+    </div>
+    
+    <div id="success-toast" class="success-toast">
+        <span id="success-message"></span>
+        <button onclick="hideSuccess()">&times;</button>
+    </div>
+    
+    <header class="header">
+        <a href="index.html" class="logo"><img src="images/logo.png" alt="Mr D Cakes Logo"></a>
+        <nav class="navbar">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#cakes">Cakes</a>
+            <a href="favorites.html">Favorites</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#review">Review</a>
+            <a href="index.html#location">Location</a>
+        </nav>
+        <div class="icons">
+            <div class="cart-icon"><i class="fa-solid fa-cart-arrow-down"></i></div>
+        </div>
+
+        <div class="cart-items-container">
+            <div class="empty-cart-message" style="text-align: center; padding: 2rem; color: #666;">
+                <i class="fa-solid fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p style="font-size: 1.2rem; margin: 0;">Your cart is empty</p>
+                <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0;">Add some delicious items to get started!</p>
+            </div>
+            <div class="cart-content"></div>
+            <div class="cart-total">Total: ₹<span id="cart-total">0</span></div>
+            
+            <div id="delivery-form" class="order-form">
+                <h4>Delivery Details</h4>
+                <input type="text" id="customer-name" placeholder="Full Name" required>
+                <input type="tel" id="phone-number" placeholder="Phone Number" required>
+                <textarea id="address" placeholder="Delivery Address" required></textarea>
+                <div class="delivery-schedule">
+                    <label for="delivery-date">Delivery Date:</label>
+                    <input type="date" id="delivery-date" required min="">
+                    <label for="delivery-time">Delivery Time:</label>
+                    <select id="delivery-time" required>
+                        <option value="">Select Time</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="13:00">1:00 PM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                        <option value="18:00">6:00 PM</option>
+                        <option value="19:00">7:00 PM</option>
+                        <option value="20:00">8:00 PM</option>
+                    </select>
+                </div>
+                <textarea id="customizations" placeholder="Special Instructions (Optional)"></textarea>
+                <button class="btn" onclick="favPlaceOrder()">Place Order</button>
+            </div>
+        </div>
+        
+        <div class="auth-modal" id="auth-modal">
+            <div class="auth-content">
+                <span class="close-auth">&times;</span>
+                <div class="auth-tabs">
+                    <button class="tab-btn active" onclick="showLogin()">Login</button>
+                    <button class="tab-btn" onclick="showSignup()">Sign Up</button>
+                </div>
+                
+                <div id="login-form" class="auth-form">
+                    <h3>Login</h3>
+                    <input type="email" id="login-email" placeholder="Email" required>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <button class="btn" onclick="login()">Login</button>
+                </div>
+                
+                <div id="signup-form" class="auth-form" style="display:none;">
+                    <h3>Sign Up</h3>
+                    <input type="text" id="signup-name" placeholder="Full Name" required>
+                    <input type="email" id="signup-email" placeholder="Email" required>
+                    <input type="password" id="signup-password" placeholder="Password" required>
+                    <button class="btn" onclick="signup()">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="cakes favorites" style="margin-top: 16vh;">
+        <h3 class="title">your <span>favorites</span></h3>
+        <div class="wrapper" id="favorites-wrapper">
+            <div class="no-favorites">
+                <p>No favorite items yet. Go back to <a href="index.html#cakes">Cakes</a> and click the heart icon on any item to add it to your favorites!</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize favorites page
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                updateFavoritesDisplay();
+                
+                // Cart functionality
+                const cartIcon = document.querySelector('.cart-icon');
+                const cartContainer = document.querySelector('.cart-items-container');
+                
+                if (cartIcon && cartContainer) {
+                    cartIcon.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        cartContainer.classList.toggle('active');
+                    });
+                }
+                
+                // Close cart when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.header') && !e.target.closest('.cart-items-container') && cartContainer) {
+                        cartContainer.classList.remove('active');
+                    }
+                });
+                
+                // Set minimum delivery date to today
+                const today = new Date().toISOString().split('T')[0];
+                const deliveryDateInput = document.getElementById('delivery-date');
+                if (deliveryDateInput) {
+                    deliveryDateInput.setAttribute('min', today);
+                }
+                
+                // Add to cart functionality for favorites page only
+                document.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('add-to-cart')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const card = e.target.closest('.cake-card');
+                        if (!card) return;
+                        
+                        const name = card.querySelector('h3').textContent;
+                        const priceElem = card.querySelector('.price');
+                        let priceText = priceElem.textContent.replace('₹', '').replace('/-', '').trim();
+                        const price = parseFloat(priceText);
+                        const image = card.querySelector('img').getAttribute('src');
+                        
+                        addToCart(name, price, image);
+                    }
+                });
+                
+                // Authentication handlers
+                const closeAuth = document.querySelector('.close-auth');
+                if (closeAuth) {
+                    closeAuth.addEventListener('click', () => {
+                        document.getElementById('auth-modal').classList.remove('active');
+                    });
+                }
+                
+            } catch (error) {
+                console.log('Favorites page initialized with localStorage mode');
+            }
+        });
+        
+        function favPlaceOrder() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+            
+            if (!cart || cart.length === 0) {
+                alert('Cart is empty');
+                return;
+            }
+            
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('phone-number').value;
+            const address = document.getElementById('address').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            const deliveryTime = document.getElementById('delivery-time').value;
+            
+            if (!name || !phone || !address || !deliveryDate || !deliveryTime) {
+                alert('Fill all fields');
+                return;
+            }
+            
+            const order = {
+                id: Date.now(),
+                items: [...cart],
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                type: 'delivery',
+                details: { name, phone, address, deliveryDate, deliveryTime },
+                date: new Date().toLocaleString(),
+                status: 'Not Confirmed Yet'
+            };
+            
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            cart.length = 0;
+            updateCartDisplay();
+            
+            alert('Order placed successfully!');
+            
+            document.getElementById('customer-name').value = '';
+            document.getElementById('phone-number').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('delivery-date').value = '';
+            document.getElementById('delivery-time').value = '';
+        }
+    </script>
+</body>
+</html>
