@@ -17,21 +17,18 @@
 - `images/` - All product and UI images
 
 ### Features:
-✅ User registration/login
-✅ Product catalog with 21 cakes
-✅ Shopping cart functionality
-✅ Favorites system
-✅ Order placement with delivery scheduling
-✅ Admin panel for order management
-✅ Order tracking system
-✅ Receipt generation
-✅ localStorage data persistence
-✅ Responsive design
-✅ SEO optimized
+-User registration/login
+-Product catalog with 21 cakes
+-Shopping cart functionality
+-Favorites system
+-Order placement with delivery scheduling
+-Admin panel for order management
+-Order tracking system
+-Receipt generation
+-localStorage data persistence
+-Responsive design
+-SEO optimized
 
-### Admin Access:
-- Email: admin@mrdcakes.com
-- Password: admin123
 
 ### Deployment:
 Upload all files to any static hosting service (Netlify, Vercel, GitHub Pages, etc.)
